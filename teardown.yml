@@ -15,24 +15,24 @@
   tasks:
 
   # Reverse order of setup
-  - name: removing doctor subnet
+  - name: deleting doctor subnet
     os_subnet:
       auth: "{{ doctor_auth }}"
       name: "{{ doctor_subnet }}"
       state: absent
 
-  - name: creating doctor network
+  - name: deleting doctor network
     os_network:
       auth: "{{ doctor_auth }}"
       name: "{{ doctor_network }}"
       state: absent
 
-  - name: removing doctor user
+  - name: deleting doctor user
     os_user:
       name: "{{ doctor_user }}"
       state: absent
 
-  - name: removing doctor project
+  - name: deleting doctor project
     os_project:
       name: "{{ doctor_project }}"
       state: absent
