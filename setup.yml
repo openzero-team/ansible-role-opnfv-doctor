@@ -52,3 +52,15 @@
       cidr: "{{ doctor_cidr }}"
       network_name: "{{ doctor_network }}"
       enable_dhcp: false
+
+  - name: creating doctor servers
+    os_server:
+      auth: "{{ doctor_auth }}"
+      image: cirros-0.3.4-x86_64-uec
+      name: "{{ item }}"
+      flavor: cirros256
+      nics:
+        - net-name: "{{ doctor_network }}"
+      auto_ip: no
+      wait: no
+    with_sequence: start=1 end={{ doctor_vm_count|int }} format=doctor-%d

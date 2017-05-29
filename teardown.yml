@@ -15,6 +15,14 @@
   tasks:
 
   # Reverse order of setup
+
+  - name: deleting doctor servers
+    os_server:
+      auth: "{{ doctor_auth }}"
+      name: "{{ item }}"
+      state: absent
+    with_sequence: start=1 end={{ doctor_vm_count|int }} format=doctor-%d
+
   - name: deleting doctor subnet
     os_subnet:
       auth: "{{ doctor_auth }}"

@@ -19,3 +19,4 @@ doctor_auth:
   username: "{{ doctor_user }}"
   password: "{{ doctor_pass }}"
   project_name: "{{ doctor_project }}"
+doctor_vm_count: 4
