@@ -3,8 +3,8 @@
 Running OPNFV doctor testing on OPNFV pods using Ansible
 
 ```bash
-source openrc
-ansible-playbook setup
-ansible-playbook run
-ansible-playbook teardown
+source admin-openrc-v3.sh
+ansible-playbook setup.yml
+ansible-playbook run.yml
+ansible-playbook teardown.yml
 ```
