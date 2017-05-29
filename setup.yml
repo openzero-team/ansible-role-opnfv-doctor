@@ -62,5 +62,15 @@
       nics:
         - net-name: "{{ doctor_network }}"
       auto_ip: no
-      wait: no
-    with_sequence: start=1 end={{ doctor_vm_count|int }} format=doctor-%d
+      wait: yes
+    with_sequence: start=1 end={{ doctor_server_count|int }} format=doctor-%d
+    async: 1800
+    poll: 0
+    register: doctor_servers
+
+  - name: waiting for doctor servers to be active
+    async_status: jid={{ item.ansible_job_id }}
+    register: doctor_jobs
+    until: doctor_jobs.finished
+    retries: 300
+    with_items: "{{ doctor_servers.results }}"
