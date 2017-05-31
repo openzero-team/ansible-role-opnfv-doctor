@@ -16,6 +16,14 @@
 
   # Reverse order of setup
 
+  - name: collecting doctor server facts
+    os_server_facts:
+      auth: "{{ doctor_auth }}"
+
+  - name: deleting doctor alarms
+    command: aodh alarm delete --name "doctor-{{ item }}"
+    with_items:  "{{ openstack_servers|map(attribute='id')|list }}"
+
   - name: deleting doctor servers
     os_server:
       auth: "{{ doctor_auth }}"

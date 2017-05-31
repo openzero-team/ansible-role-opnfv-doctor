@@ -20,3 +20,4 @@ doctor_auth:
   password: "{{ doctor_pass }}"
   project_name: "{{ doctor_project }}"
 doctor_server_count: 4
+doctor_alarm_action: 'http://localhost:12346/failure'

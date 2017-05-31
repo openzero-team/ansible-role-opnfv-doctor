@@ -74,3 +74,22 @@
     until: doctor_jobs.finished
     retries: 300
     with_items: "{{ doctor_servers.results }}"
+
+  - name: collecting doctor server facts
+    os_server_facts:
+      auth: "{{ doctor_auth }}"
+
+  # TODO(yujunz) check for existence before create
+  - name: creating alarms for server error
+    command: >
+            aodh alarm create
+                 --type event
+                 --name "doctor-{{ item }}"
+                 --alarm-action "{{ doctor_alarm_action }}"
+                 --description "server error"
+                 --enabled True
+                 --repeat-actions False
+                 --severity "moderate"
+                 --event-type compute.instance.update
+                 --query "traits.state=string::error;traits.instance_id=string::{{ item }}"
+    with_items: "{{ openstack_servers|map(attribute='id')|list }}"
