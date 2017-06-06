@@ -8,11 +8,19 @@
 ##############################################################################
 
 ---
-- hosts: doctor-tester
+- hosts: doctor-victim
 
   gather_facts: no
 
   tasks:
 
-  - name: creating doctor project
-    debug: msg="not implemented yet"
+  - name: disabling icmp on victim
+    become: true
+    command: iptables -A INPUT -p icmp -j DROP
+
+  - name: pausing for error detection
+    pause: seconds=10
+
+  - name: enabling icmp on victim
+    become: true
+    command: iptables -D INPUT -p icmp -j DROP
