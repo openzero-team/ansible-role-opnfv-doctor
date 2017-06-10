@@ -83,22 +83,14 @@
   - name: creating alarms for server error
     command: >
             aodh alarm create
+                 --os-project-name doctor
                  --type event
-                 --name "doctor-{{ item }}"
+                 --name "doctor-{{ item.0 }}"
                  --alarm-action "{{ doctor_alarm_action }}"
                  --description "server error"
                  --enabled True
                  --repeat-actions False
                  --severity "moderate"
                  --event-type compute.instance.update
-                 --query "traits.state=string::error;traits.instance_id=string::{{ item }}"
-    with_items: "{{ openstack_servers|map(attribute='id')|list }}"
-
-  - name: starting inspector
-    shell: pgrep -f \"{{ doctor_inspector }}\" || sudo -E {{ doctor_inspector }}
-
-  - name: starting monitor
-    shell: pgrep -f \"{{ doctor_monitor }}\" || sudo -E {{ doctor_monitor }}
-
-  - name: starting consumer
-    shell: pgrep -f \"{{ doctor_consumer }}\" || sudo -E {{ doctor_consumer }} >consumer.log 2>&1 &
+                 --query "traits.state=string::error;traits.instance_id=string::{{ item.1 }}"
+    with_indexed_items: "{{ openstack_servers|map(attribute='id')|list }}"

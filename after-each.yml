@@ -1,0 +1,24 @@
+- hosts: doctor-tester
+
+  gather_facts: no
+
+  tasks:
+
+  - name: unsetting forced down services
+    shell: nova service-force-down --unset {{ compute_host }} nova-compute
+
+  - name: collecting doctor server facts
+    os_server_facts:
+      auth: "{{ doctor_auth }}"
+
+  - name: resetting doctor server state
+    command: nova reset-state --active "{{ item }}"
+    with_sequence: start=1 end={{ doctor_server_count|int }} format=doctor-%d
+    async: 1800
+    poll: 0
+    register: doctor_servers
+
+  - name: resetting doctor alarms
+    command: aodh alarm state set --state ok --name "{{ item }}"
+    with_sequence: start=0 end={{ (doctor_server_count - 1)|int }} format=doctor-%d
+    ignore_errors: yes

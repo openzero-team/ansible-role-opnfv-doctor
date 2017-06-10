@@ -14,26 +14,13 @@
 
   tasks:
 
-  # Reverse order of setup
-
-  - name: stopping monitor
-    shell: pgrep -f "{{ doctor_monitor }}"|xargs sudo kill
-    ignore_errors: yes
-
-  - name: stopping inspector
-    shell: pgrep -f "{{ doctor_inspector }}"|xargs sudo kill
-    ignore_errors: yes
-
-  - name: unsetting forced down services
-    shell: nova service-force-down --unset {{ compute_host }} nova-compute
-
   - name: collecting doctor server facts
     os_server_facts:
       auth: "{{ doctor_auth }}"
 
   - name: deleting doctor alarms
-    command: aodh alarm delete --name "doctor-{{ item }}"
-    with_items:  "{{ openstack_servers|map(attribute='id')|list }}"
+    command: aodh alarm delete --name "doctor-{{ item.0 }}"
+    with_indexed_items:  "{{ openstack_servers|map(attribute='id')|list }}"
     ignore_errors: yes
 
   - name: deleting doctor servers

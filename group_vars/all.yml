@@ -7,9 +7,8 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 ##############################################################################
 
-
-compute_host: yujunz-doctor-dev
-compute_ip: 192.168.1.32
+compute_host: doctor-victim
+compute_ip: 192.168.1.47
 inspector_type: sample
 inspector_port: 12345
 consumer_ip: 192.168.1.45
@@ -29,8 +28,8 @@ doctor_auth:
   project_name: "{{ doctor_project }}"
 doctor_server_count: 4
 
-doctor_alarm_action: 'http://{{ consumer_ip }}:{{ consumer_port }}/failure'
+doctor_alarm_action: 'http://192.168.1.27:12345/failure'
 
-doctor_monitor: 'python ../doctor/tests/monitor.py {{ compute_host }} {{ compute_ip }} {{ inspector_type }} >logs/monitor.log 2>&1 &'
-doctor_inspector: 'python ../doctor/tests/inspector.py {{ inspector_port }}  >logs/inspector.log 2>&1 &'
+doctor_monitor: 'python ../doctor/tests/monitor.py --config-file ../doctor/tests/doctor.conf >logs/monitor.log 2>&1 &'
+doctor_inspector: 'python ../doctor/tests/inspector.py --config-file ../doctor/tests/doctor.conf  >logs/inspector.log 2>&1 &'
 doctor_consumer: 'python ../doctor/tests/consumer.py {{ consumer_port }} >logs/consumer.log 2>&1 &'
